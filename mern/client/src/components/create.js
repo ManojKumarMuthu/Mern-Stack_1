@@ -3,9 +3,13 @@ import { useNavigate } from "react-router";
 
 export default function Create() {
   const [form, setForm] = useState({
-    name: "",
-    position: "",
-    level: "",
+    First_Name: "",
+    Last_Name: "",
+    Email: "",
+    Region: "",
+    Rating: "",
+    Fee: "",
+    Sale: ""
   });
   const navigate = useNavigate();
 
@@ -35,33 +39,80 @@ export default function Create() {
       return;
     });
 
-    setForm({ name: "", position: "", level: "" });
+    setForm({ 
+    First_Name: "",
+    Last_Name: "",
+    Email: "",
+    Region: "",
+    Rating: "",
+    Fee: "",
+    Sale: "" });
     navigate("/");
   }
 
   // This following section will display the form that takes the input from the user.
   return (
     <div>
-      <h3>Create New Record</h3>
+      <h3>Create New Agent</h3>
       <form onSubmit={onSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="First_Name">First Name</label>
           <input
             type="text"
             className="form-control"
-            id="name"
-            value={form.name}
-            onChange={(e) => updateForm({ name: e.target.value })}
+            id="First_Name"
+            value={form.First_Name}
+            onChange={(e) => updateForm({ First_Name: e.target.value })}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="position">Position</label>
+          <label htmlFor="Last_Name">Last Name</label>
           <input
             type="text"
             className="form-control"
-            id="position"
-            value={form.position}
-            onChange={(e) => updateForm({ position: e.target.value })}
+            id="Last_Name"
+            value={form.Last_Name}
+            onChange={(e) => updateForm({ Last_Name: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Email">Email</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Email"
+            value={form.Email}
+            onChange={(e) => updateForm({ Email: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Rating">Rating</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Rating"
+            value={form.Rating}
+            onChange={(e) => updateForm({ Rating: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Fee">Fee</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Fee"
+            value={form.Fee}
+            onChange={(e) => updateForm({ Fee: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Sale">Sale</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Sale"
+            value={form.Sale}
+            onChange={(e) => updateForm({ Sale: e.target.value })}
           />
         </div>
         <div className="form-group">
@@ -69,43 +120,55 @@ export default function Create() {
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionIntern"
-              value="Intern"
-              checked={form.level === "Intern"}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="regionOptions"
+              id="regionEast"
+              value="East"
+              checked={form.Region === "East"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
             />
-            <label htmlFor="positionIntern" className="form-check-label">Intern</label>
+            <label htmlFor="regionEast" className="form-check-label">East</label>
           </div>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionJunior"
-              value="Junior"
-              checked={form.level === "Junior"}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="regionOptions"
+              id="regionWest"
+              value="West"
+              checked={form.Region === "West"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
             />
-            <label htmlFor="positionJunior" className="form-check-label">Junior</label>
+            <label htmlFor="regionWest" className="form-check-label">West</label>
           </div>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionSenior"
-              value="Senior"
-              checked={form.level === "Senior"}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="regionOptions"
+              id="regionNorth"
+              value="North"
+              checked={form.Region === "North"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
             />
-            <label htmlFor="positionSenior" className="form-check-label">Senior</label>
+            <label htmlFor="regionNorth" className="form-check-label">North</label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="regionOptions"
+              id="regionSouth"
+              value="South"
+              checked={form.Region === "South"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
+            />
+            <label htmlFor="regionSouth" className="form-check-label">South</label>
           </div>
         </div>
         <div className="form-group">
           <input
             type="submit"
-            value="Create person"
+            value="Create Agent"
             className="btn btn-primary"
           />
         </div>

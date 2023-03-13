@@ -3,9 +3,14 @@ import { useParams, useNavigate } from "react-router";
 
 export default function Edit() {
   const [form, setForm] = useState({
-    name: "",
-    position: "",
-    level: "",
+
+    First_Name: "",
+    Last_Name: "",
+    Email: "",
+    Region: "",
+    Rating: "",
+    Fee: "",
+    Sale: "",
     records: [],
   });
   const params = useParams();
@@ -47,9 +52,14 @@ export default function Edit() {
   async function onSubmit(e) {
     e.preventDefault();
     const editedPerson = {
-      name: form.name,
-      position: form.position,
-      level: form.level,
+     
+      First_Name: form.First_Name,
+      Last_Name: form.Last_Name,
+      Email: form.Email,
+      Region: form.Region,
+      Rating: form.Rating,
+      Fee: form.Fee,
+      Sale: form.Sale,
     };
 
     // This will send a post request to update the data in the database.
@@ -69,24 +79,64 @@ export default function Edit() {
     <div>
       <h3>Update Record</h3>
       <form onSubmit={onSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Name: </label>
+      <div className="form-group">
+          <label htmlFor="First_Name">First Name</label>
           <input
             type="text"
             className="form-control"
-            id="name"
-            value={form.name}
-            onChange={(e) => updateForm({ name: e.target.value })}
+            id="First_Name"
+            value={form.First_Name}
+            onChange={(e) => updateForm({ First_Name: e.target.value })}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="position">Position: </label>
+          <label htmlFor="Last_Name">Last Name</label>
           <input
             type="text"
             className="form-control"
-            id="position"
-            value={form.position}
-            onChange={(e) => updateForm({ position: e.target.value })}
+            id="Last_Name1"
+            value={form.Last_Name}
+            onChange={(e) => updateForm({ Last_Name: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Email">Email</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Email1"
+            value={form.Email}
+            onChange={(e) => updateForm({ Email: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Rating">Rating</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Rating1"
+            value={form.Rating}
+            onChange={(e) => updateForm({ Rating: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Fee">Fee</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Fee1"
+            value={form.Fee}
+            onChange={(e) => updateForm({ Fee: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Sale">Sale</label>
+          <input
+            type="text"
+            className="form-control"
+            id="Sale1"
+            value={form.Sale}
+            onChange={(e) => updateForm({ Sale: e.target.value })}
           />
         </div>
         <div className="form-group">
@@ -94,45 +144,55 @@ export default function Edit() {
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionIntern"
-              value="Intern"
-              checked={form.level === "Intern"}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="regionOptions"
+              id="regionEast1"
+              value="East"
+              checked={form.Region === "East"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
             />
-            <label htmlFor="positionIntern" className="form-check-label">Intern</label>
+            <label htmlFor="regionEast" className="form-check-label">East</label>
           </div>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionJunior"
-              value="Junior"
-              checked={form.level === "Junior"}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="regionOptions"
+              id="regionWest11"
+              value="West"
+              checked={form.Region === "West"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
             />
-            <label htmlFor="positionJunior" className="form-check-label">Junior</label>
+            <label htmlFor="regionWest" className="form-check-label">West</label>
           </div>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionSenior"
-              value="Senior"
-              checked={form.level === "Senior"}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="regionOptions"
+              id="regionNorth1"
+              value="North"
+              checked={form.Region === "North"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
             />
-            <label htmlFor="positionSenior" className="form-check-label">Senior</label>
+            <label htmlFor="regionNorth" className="form-check-label">North</label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="regionOptions"
+              id="regionSouth1"
+              value="South"
+              checked={form.Region === "South"}
+              onChange={(e) => updateForm({ Region: e.target.value })}
+            />
+            <label htmlFor="regionSouth" className="form-check-label">South</label>
+          </div>
         </div>
-        </div>
-        <br />
-
         <div className="form-group">
           <input
             type="submit"
-            value="Update Record"
+            value="Update Agent"
             className="btn btn-primary"
           />
         </div>
