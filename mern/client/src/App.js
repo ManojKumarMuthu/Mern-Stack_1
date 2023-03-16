@@ -13,6 +13,7 @@ import Create from "./components/create";
 import Login from "./components/login";
 import Create_user from "./components/user";
 import Home_page from "./components/homepage";
+import Transaction from "./components/transaction";
 
 const App = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
         <Route path="/create_user" element={<Create_user />} />
+        <Route exact path="/Transaction" element={<Transaction />} />
       </Routes>
 
       </div>

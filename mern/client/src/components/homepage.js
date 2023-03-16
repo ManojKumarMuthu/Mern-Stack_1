@@ -20,7 +20,7 @@ function NavigationCards() {
           <Card.Text>
             Contains all transaction information and admin command.
           </Card.Text>
-          <Card.Link href="/transactionlist">Go to Transaction List</Card.Link>
+          <Card.Link href="/Transaction">Go to Transaction List</Card.Link>
         </Card.Body>
       </Card>
     </div>

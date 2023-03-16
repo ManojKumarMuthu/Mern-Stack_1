@@ -6,8 +6,7 @@ const Transaction = (props) => (
     <td>{props.transaction.First_Name}</td>
     <td>{props.transaction.Last_Name}</td>
     <td>{props.transaction.Email}</td>
-    <td>{props.transaction.Region}</td>
-    <td>{props.transaction.Rating}</td>
+    <td>{props.transaction.R}</td>
     <td>{props.transaction.Fee}</td>
     <td>{props.transaction.Sale}</td>
     <td>
@@ -23,12 +22,12 @@ const Transaction = (props) => (
   </tr>
 );
 
-export default function RecordList() {
-  const [records, setRecords] = useState([]);
+export default function TransactionList() {
+  const [Transaction, setTransaction] = useState([]);
 
   // This method fetches the records from the database.
   useEffect(() => {
-    async function getRecords() {
+    async function getTransaction() {
       const response = await fetch(`http://localhost:5000/transaction/`);
 
       if (!response.ok) {
@@ -41,7 +40,7 @@ export default function RecordList() {
       setRecords(records);
     }
 
-    getRecords();
+    get Records();
 
     return; 
   }, [records.length]);
@@ -76,11 +75,8 @@ export default function RecordList() {
       <table className="table table-striped" style={{ marginTop: 20 }}>
         <thead>
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
             <th>Email</th>
-            <th>Region</th>
-            <th>Rating</th>
+            <th>R</th>
             <th>Fee</th>
             <th>Sale</th>
             <th>Action</th>
