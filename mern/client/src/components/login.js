@@ -1,52 +1,53 @@
 // import React, { useState } from "react";
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import { useNavigate } from "react-router-dom";
+// import { setToken } from "./auth";
+// import { NavLink } from "react-router-dom";
+// import { Alert } from 'react-bootstrap';
 
 // function Login() {
 //   const [password, setPassword] = useState("");
 //   const [email, setEmail] = useState("");
-//   const [isError, setIsError] = useState(false) //true = error, false = no error.
-//   const error = "Email or Password not matched"
-//   const [passwordError, setpasswordError] = useState("");
-//   const [emailError, setemailError] = useState("");
+//   const [showAlert, setShowAlert] = useState(false);
+//   const [alertVariant, setAlertVariant] = useState("");
+//   const [alertMessage, setAlertMessage] = useState("");
 //   const navigate = useNavigate();
   
-//   const loginSubmit = (e) => {
+//   const loginSubmit = async (e) => {
 //     e.preventDefault();
-//     logMe();
+//     try {
+//       const response = await fetch("http://localhost:5000/login", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, password }),
+//       });
+//       const data = await response.json();
+//       if (response.ok) {
+//         setToken(data.token);
+//         navigate("/Home_page");
+//       } else {
+//         setShowAlert(true);
+//         setAlertVariant("danger");
+//         setAlertMessage("Email or password is incorrect.");
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       setShowAlert(true);
+//       setAlertVariant("danger");
+//       setAlertMessage("An error occurred. Please try again later.");
+//     }
 //   };
-  
-//   const logMe = () => {
-//     var myHeaders = new Headers();
-//     myHeaders.append("Content-Type", "application/json");
-//     var raw = JSON.stringify({
-//       "email": email,
-//       "password": password
-//     });
-//     var requestOptions = {
-//       method: 'POST',
-//       headers: myHeaders,
-//       body: raw,
-//       redirect: 'follow'
-//     };
-//     fetch("http://localhost:5000/login", requestOptions)
-//       .then(response => response.text())
-//       .then(result => {
-//         localStorage.setItem("isLoggedIn", result);
-//         if(result === "true"){
-//           navigate("/");
-//         } else {
-//           setIsError(true)
-//         }
-//       })
-//       .catch(error => console.log('error', error));
-//   }
   
 //   return (
 //     <div className="App">
 //       <div className="container">
 //         <div className="row d-flex justify-content-center">
 //           <div className="col-md-4">
+//             {showAlert && (
+//               <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+//                 {alertMessage}
+//               </Alert>
+//             )}
 //             <form id="loginform" onSubmit={loginSubmit}>
 //               <div className="form-group">
 //                 <label>Email address</label>
@@ -59,9 +60,6 @@
 //                   placeholder="Enter email"
 //                   onChange={(event) => setEmail(event.target.value)}
 //                 />
-//                 <small id="emailHelp" className="text-danger form-text">
-//                   {emailError}
-//                 </small>
 //               </div>
 //               <div className="form-group">
 //                 <label>Password</label>
@@ -72,19 +70,16 @@
 //                   placeholder="Password"
 //                   onChange={(event) => setPassword(event.target.value)}
 //                 />
-//                 <small id="passworderror" className="text-danger form-text">
-//                   {passwordError}
-//                 </small>
 //               </div>
-//               {isError ? (
-//                 <p style={{color: "red"}}>{error}</p>
-//               ) : (
-//                 <>
-//                 </>
-//               )}
 //               <button type="submit" className="btn btn-primary">
 //                 Submit
 //               </button>
+//               <br></br>
+//               <div>
+//                 <NavLink className="btn btn-secondary mt-2" to="/create_user">
+//                   Create User
+//                 </NavLink>
+//               </div>
 //             </form>
 //           </div>
 //         </div>
@@ -99,19 +94,17 @@
 
 
 
-
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "./auth";
+import { Alert } from 'react-bootstrap';
+import { NavLink } from "react-router-dom";
 
 function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [isError, setIsError] = useState(false) //true = error, false = no error.
-  const error = "Email or Password not matched"
-  const [passwordError, setpasswordError] = useState("");
-  const [emailError, setemailError] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const navigate = useNavigate();
   
   const loginSubmit = async (e) => {
@@ -124,14 +117,20 @@ function Login() {
       });
       const data = await response.json();
       if (response.ok) {
-        setToken(data.token);
+        localStorage.setItem("token", data.token);
         navigate("/Home_page");
       } else {
-        setIsError(true)
+        setShowAlert(true);
+        setAlertVariant("danger");
+        setAlertMessage("Email or password is incorrect.");
+        setTimeout(() => setShowAlert(false), 5000); // Set a timeout of 5 seconds to hide the alert
       }
     } catch (error) {
       console.error(error);
-      setIsError(true)
+      setShowAlert(true);
+      setAlertVariant("danger");
+      setAlertMessage("An error occurred. Please try again later.");
+      setTimeout(() => setShowAlert(false), 5000); // Set a timeout of 5 seconds to hide the alert
     }
   };
   
@@ -140,6 +139,11 @@ function Login() {
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-md-4">
+            {showAlert && (
+              <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+                {alertMessage}
+              </Alert>
+            )}
             <form id="loginform" onSubmit={loginSubmit}>
               <div className="form-group">
                 <label>Email address</label>
@@ -152,9 +156,6 @@ function Login() {
                   placeholder="Enter email"
                   onChange={(event) => setEmail(event.target.value)}
                 />
-                <small id="emailHelp" className="text-danger form-text">
-                  {emailError}
-                </small>
               </div>
               <div className="form-group">
                 <label>Password</label>
@@ -165,19 +166,16 @@ function Login() {
                   placeholder="Password"
                   onChange={(event) => setPassword(event.target.value)}
                 />
-                <small id="passworderror" className="text-danger form-text">
-                  {passwordError}
-                </small>
               </div>
-              {isError ? (
-                <p style={{color: "red"}}>{error}</p>
-              ) : (
-                <>
-                </>
-              )}
               <button type="submit" className="btn btn-primary">
                 Submit
               </button>
+              <br></br>
+              <div>
+                <NavLink className="btn btn-secondary mt-2" to="/create_user">
+                  Create User
+                </NavLink>
+              </div>
             </form>
           </div>
         </div>
@@ -189,78 +187,72 @@ function Login() {
 export default Login;
 
 
-
-
-// import React, { useState, useEffect } from "react";
+// import React, { useState } from "react";
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import { useNavigate } from "react-router-dom";
-// import Alert  from "react-bootstrap/Alert";
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
+// import { setToken, getToken } from "./auth";
+// import { NavLink } from "react-router-dom";
+// import { Alert } from 'react-bootstrap';
+// import Navbar from "./navbar";
+
 // function Login() {
-//   const [showAlert, setShowAlert] = useState(true);
-//   const [showToast, setShowToast] = useState(true);
-//   const isLoggedIn = localStorage.isLoggedIn;
 //   const [password, setPassword] = useState("");
 //   const [email, setEmail] = useState("");
-//   const [isError, setIsError] = useState(false) //true = error, false = no error.
-//   const [isLogin, setIsLogin] = useState(false) //true = error, false = no error.
-//   const error = "Connexion Fail"
-//   const [passwordError, setpasswordError] = useState("");
-//   const [emailError, setemailError] = useState("");
+//   const [showAlert, setShowAlert] = useState(false);
+//   const [alertVariant, setAlertVariant] = useState("");
+//   const [alertMessage, setAlertMessage] = useState("");
 //   const navigate = useNavigate();
-//   useEffect(() => {
-//     if (error) {
+//   const isLoggedIn = getToken() !== null; // Set isLoggedIn based on the token
+  
+//   const loginSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const response = await fetch("http://localhost:5000/login", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, password }),
+//       });
+//       const data = await response.json();
+//       if (response.ok) {
+//         setToken(data.token);
+        
+//         // Validate the token
+//         const validateResponse = await fetch(`http://localhost:5000/validate_token?token=${data.token}`);
+//         const validateData = await validateResponse.json();
+//         if (validateResponse.ok && validateData.data.valid) {
+//           navigate("/Home_page");
+//         } else {
+//           setToken(null);
+//           setShowAlert(true);
+//           setAlertVariant("danger");
+//           setAlertMessage("Token validation failed.");
+//         }
+//       } else {
+//         setShowAlert(true);
+//         setAlertVariant("danger");
+//         setAlertMessage("Email or password is incorrect.");
+//       }
+//     } catch (error) {
+//       console.error(error);
 //       setShowAlert(true);
-//       setTimeout(() => {
-//         setShowAlert(false);
-//         setIsError('');
-//       }, 5000);
+//       setAlertVariant("danger");
+//       setAlertMessage("An error occurred. Please try again later.");
 //     }
-//   }, [error]);
-//   const logMe = () => {
-//     var myHeaders = new Headers();
-//     myHeaders.append("Content-Type", "application/json");
-//     var raw = JSON.stringify({
-//       "email": email,
-//       "password": password
-//     });
-//     var requestOptions = {
-//       method: 'POST',
-//       headers: myHeaders,
-//       body: raw,
-//       redirect: 'follow'
-//     };
-//     fetch("http://localhost:5000/login", requestOptions)
-//       .then(response => response.text())
-//       .then(result => {
-//         // isConnected(result)
-//           localStorage.setItem("isLoggedIn", result);
-//         if(result === "true"){
-//     toast.success(':unicorn_face: Connected', {
-//         position: "top-right",
-//         autoClose: 5000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//         theme: "light",
-//     });
-//     setTimeout(() => window.location = "/", 7000);
-// } else {
-//     setIsError(true);
-//     setTimeout(() => setIsError(false), 5000);
-// }
-//       })
-//       .catch(error => console.log('error', error));
-//   }
+//   };
+  
 //   return (
 //     <div className="App">
+//       {/* Render Navbar only if isLoggedIn is true */}
+//       {isLoggedIn && <Navbar />}
 //       <div className="container">
 //         <div className="row d-flex justify-content-center">
 //           <div className="col-md-4">
-//             <form id="loginform" onSubmit={logMe}>
+//             {showAlert && (
+//               <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+//                 {alertMessage}
+//               </Alert>
+//             )}
+//             <form id="loginform" onSubmit={loginSubmit}>
 //               <div className="form-group">
 //                 <label>Email address</label>
 //                 <input
@@ -272,9 +264,6 @@ export default Login;
 //                   placeholder="Enter email"
 //                   onChange={(event) => setEmail(event.target.value)}
 //                 />
-//                 <small id="emailHelp" className="text-danger form-text">
-//                   {emailError}
-//                 </small>
 //               </div>
 //               <div className="form-group">
 //                 <label>Password</label>
@@ -285,36 +274,22 @@ export default Login;
 //                   placeholder="Password"
 //                   onChange={(event) => setPassword(event.target.value)}
 //                 />
-//                 <small id="passworderror" className="text-danger form-text">
-//                   {passwordError}
-//                 </small>
 //               </div>
-//               {showAlert &&
-//                   <Alert variant="danger" onClose={() => setShowAlert(false)}>
-//                   <Alert.Heading>{error}</Alert.Heading>
-//                   </Alert>
-//               }
 //               <button type="submit" className="btn btn-primary">
 //                 Submit
 //               </button>
-//             <ToastContainer
-//               position="top-right"
-//               autoClose={5000}
-//               hideProgressBar={false}
-//               newestOnTop={false}
-//               closeOnClick
-//               rtl={false}
-//               pauseOnFocusLoss
-//               draggable
-//               pauseOnHover
-//               theme="light"
-//               />
+//               <br></br>
+//               <div>
+//                 <NavLink className="btn btn-secondary mt-2" to="/create_user">
+//                   Create User
+//                 </NavLink>
+//               </div>
 //             </form>
 //           </div>
-//           {/* Source: <a href="https://askavy.com/react-form/">React Form</a> */}
 //         </div>
 //       </div>
 //     </div>
 //   );
 // }
+
 // export default Login;

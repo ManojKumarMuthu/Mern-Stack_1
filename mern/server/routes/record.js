@@ -12,41 +12,8 @@ const dbo = require("../db/conn");
 // This help convert the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
 
-// Verification //
 
-// function verifyToken(req, res, next) {
-//   const authHeader = req.headers.authorization;
-//   if (!authHeader) {
-//     return res.status(401).json({ message: 'No token provided' });
-//   }
-
-//   const token = authHeader.split(' ')[1];
-//   jwt.verify(token, 'mysecret', function(err, decoded) {
-//     if (err) {
-//       return res.status(401).json({ message: 'Invalid token' });
-//     }
-
-//     req.userId = decoded.id;
-//     next();
-//   });
-// }
-
-
-
-
-
-// This section will help you get a list of all the records.
-// recordRoutes.route("/record").get(function (req, res) {
-//   let db_connect = dbo.getDb("employees");
-//   db_connect
-//     .collection("records")
-//     .find({})
-//     .toArray(function (err, result) {
-//       if (err) throw err;
-//       res.json(result);
-//     });
-// });
-
+// records employees //
 recordRoutes.route('/record').get( function(req, res) {
   let db_connect = dbo.getDb('employees');
   db_connect.collection('records').find({}).toArray(function(err, result) {
@@ -113,7 +80,8 @@ recordRoutes.route("/update/:id").post( function (req, response) {
 });
 
 
-// Login
+// Login //
+
 recordRoutes.route("/login").post(async function (req, res) {
   let db_connect = dbo.getDb();
   const { email, password } = req.body;
@@ -131,6 +99,31 @@ recordRoutes.route("/login").post(async function (req, res) {
   });
   
 
+// const payload = { id: 1234 }; // data you want to include in the token
+// const secret = 'rocket'; // a secret key to sign the token
+// const options = { expiresIn: '24h' }; // token expiration time
+
+// const token = jwt.sign(payload, secret, options);
+
+//   recordRoutes.route("/login").post(async function (req, res) {
+//     let db_connect = dbo.getDb();
+//     const { email, password } = req.body;
+//     const user = await db_connect.collection("users").findOne({ "email": email });
+    
+//     if (!user) {
+//       return res.status(400).json({ message: "Invalid email or password" });
+//     }
+    
+//     if (password !== user.password) {
+//       return res.status(400).json({ message: "Invalid email or password" });
+//     }
+    
+//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+//       expiresIn: "24h",
+//     });
+  
+//     res.json({ token });
+//   });
 
   // recordRoutes.route('/login').post(async function(req, res) {
   //   let db_connect = dbo.getDb();
@@ -176,4 +169,79 @@ recordRoutes.route("/users/add").post( function (req, response) {
 });
 
 
+
+
+// Transaction routes //
+recordRoutes.route('/transaction').get(function(req, res) {
+  let db_connect = dbo.getDb('employees');
+  db_connect.collection('transaction').find({}).sort({date: -1}).limit(10).toArray(function(err, result) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+
+// This section will help you create a new record.
+recordRoutes.route("/transaction/add").post(function (req, response) {
+  let db_connect = dbo.getDb();
+  let myobj = {
+    
+    agent_name: req.body.agent_name,
+    transaction_number: req.body.transaction_number,
+    sale: req.body.sale,
+    date: new Date(),
+    
+  };
+  db_connect.collection("transaction").insertOne(myobj, function (err, res) {
+    if (err) throw err;
+    response.json(res);
+  });
+});
+
+// validation //
+
+recordRoutes.route("/validate_token", async (req, res) => {
+  try {
+    const sessionToken = req.query.token;
+    const session = await db.collection("sessions").findOne({
+      session_token: sessionToken,
+      expiration_date: { $gt: new Date() },
+    });
+    if (session) {
+      const user = await db.collection("users").findOne({ _id: session.user_id });
+      if (user) {
+        res.json({
+          status: "ok",
+          data: {
+            valid: true,
+            user: {
+              first_name: user.first_name,
+              last_name: user.last_name,
+              id: user._id.toString(),
+            },
+            message: "Token is valid.",
+          },
+        });
+      } else {
+        res.json({
+          status: "error",
+          data: { valid: false, message: "Invalid token." },
+        });
+      }
+    } else {
+      res.json({
+        status: "error",
+        data: { valid: false, message: "Invalid token." },
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "error", data: { message: err.message } });
+  }
+});
+
+console.log(process.env.JWT_SECRET);
+
+
 module.exports = recordRoutes;
+

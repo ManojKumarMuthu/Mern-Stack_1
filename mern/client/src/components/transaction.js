@@ -1,31 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Transaction = (props) => (
   <tr>
-    <td>{props.transaction.First_Name}</td>
-    <td>{props.transaction.Last_Name}</td>
-    <td>{props.transaction.Email}</td>
-    <td>{props.transaction.R}</td>
-    <td>{props.transaction.Fee}</td>
-    <td>{props.transaction.Sale}</td>
-    <td>
-      <Link className="btn btn-link" to={`/edit/${props.record._id}`}>Edit</Link> |
-      <button className="btn btn-link"
-        onClick={() => {
-          props.deleteTransaction(props.record._id);
-        }}
-      >
-        Delete
-      </button>
-    </td>
+    <td>{props.transaction.agent_name}</td>
+    <td>{props.transaction.transaction_number}</td>
+    <td>{props.transaction.sale}</td>
+    <td>{props.transaction.date}</td>
   </tr>
 );
 
 export default function TransactionList() {
-  const [Transaction, setTransaction] = useState([]);
+  const [transaction, setTransaction] = useState([]);
 
-  // This method fetches the records from the database.
   useEffect(() => {
     async function getTransaction() {
       const response = await fetch(`http://localhost:5000/transaction/`);
@@ -36,53 +23,42 @@ export default function TransactionList() {
         return;
       }
 
-      const records = await response.json();
-      setRecords(records);
+      const transactions = await response.json();
+      setTransaction(transactions);
     }
 
-    get Records();
+    getTransaction();
+  }, []);
 
-    return; 
-  }, [records.length]);
-
-  // This method will delete a record
-  async function deleteRecord(id) {
-    await fetch(`http://localhost:5000/${id}`, {
-      method: "DELETE"
-    });
-
-    const newRecords = records.filter((el) => el._id !== id);
-    setRecords(newRecords);
-  }
-
-  // This method will map out the records on the table
-  function recordList() {
-    return records.map((record) => {
+  function transactionList() {
+    return transaction.map((transaction) => {
       return (
-        <Record
-          record={record}
-          deleteRecord={() => deleteRecord(record._id)}
-          key={record._id}
+        <Transaction
+          transaction={transaction}
+          key={transaction._id}
         />
       );
     });
   }
 
-  // This following section will display the table with the records of individuals.
   return (
     <div>
+      <div>
+        <NavLink className="btn btn-secondary mt-2" to="/CreateTransaction">
+          Create Transaction
+        </NavLink>
+      </div>
       <h3>Transaction List</h3>
       <table className="table table-striped" style={{ marginTop: 20 }}>
         <thead>
           <tr>
-            <th>Email</th>
-            <th>R</th>
-            <th>Fee</th>
+            <th>Agent Name</th>
+            <th>Transaction Number</th>
             <th>Sale</th>
-            <th>Action</th>
+            <th>Date</th>
           </tr>
         </thead>
-        <tbody>{recordList()}</tbody>
+        <tbody>{transactionList()}</tbody>
       </table>
     </div>
   );
